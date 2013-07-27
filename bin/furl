@@ -1,0 +1,42 @@
+#!/usr/bin/env ruby
+
+first_url = ARGV[0]
+num = ARGV[1]
+
+num = 10 if num.nil?
+
+def usage
+  print(<<-"EOB")
+get random urls!
+
+  Usage:
+    $ furl http://example.com/
+
+  You could select the number of urls by using option.
+    $ furl http://example.com/ 5
+
+  EOB
+  exit
+end
+
+def find_rand_url(url)
+  urls = []
+  require 'open-uri'
+  open(url) {|f|
+    urls = URI.extract(f.read, ['http', 'https'])
+  }
+  urls[rand(urls.length)]
+end
+
+if first_url.nil?
+  usage
+else
+  res = find_rand_url(first_url)
+  p res
+  num.to_i.times do
+    res = find_rand_url(res)
+    p res
+  end
+end
+
+p res
