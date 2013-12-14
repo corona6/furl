@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+require 'open-uri'
+
 first_url = ARGV[0]
 num = ARGV[1]
 
@@ -21,11 +23,18 @@ end
 
 def find_rand_url(url)
   urls = []
-  require 'open-uri'
-  open(url) {|f|
-    urls = URI.extract(f.read, ['http', 'https'])
-  }
-  urls[rand(urls.length)]
+  begin
+    open(url) {|f|
+      urls = URI.extract(f.read, ['http', 'https'])
+    }
+    loop do
+      url = urls[rand(urls.length)]
+      break if !url.nil? || url != "http:" || url != "https:" || url != "http://" || url != "https://"
+    end
+    url
+  rescue
+    nil
+  end
 end
 
 if first_url.nil?
@@ -34,9 +43,8 @@ else
   res = find_rand_url(first_url)
   p res
   num.to_i.times do
+    break if res.nil?
     res = find_rand_url(res)
     p res
   end
 end
-
-p res

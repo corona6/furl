@@ -4,7 +4,7 @@ get random urls!
 
 ## Installation
 
-    $ gem install sshenc
+    $ gem install furl
 
 ## Usage
 
